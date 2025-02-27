@@ -1,22 +1,20 @@
 <!doctype html>
-<!-- 
-* Bootstrap Simple Admin Template
-* Version: 2.1
-* Author: Alexis Luna
-* Website: https://github.com/alexis-luna/bootstrap-simple-admin-template
--->
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Charts | Bootstrap Simple Admin Template</title>
+    <title>Tables | Bootstrap Simple Admin Template</title>
     <link href="assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
     <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
     <link href="assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
     <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="assets/vendor/datatables/datatables.min.css" rel="stylesheet">
     <link href="assets/css/master.css" rel="stylesheet">
+
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/quiz-result-handler.js"></script>
 </head>
 
 <script>
@@ -24,23 +22,29 @@
         const userData = localStorage.getItem("user");
 
         if (!userData) {
-            window.location.href = "login.html";
+            window.location.href = "login.html"; 
             return;
         }
 
         const user = JSON.parse(userData);
         const usernameDisplay = document.getElementById("username-display");
-        
         if (user.username) {
             usernameDisplay.textContent = user.username;
         } else {
             usernameDisplay.textContent = "User";
         }
+
+        document.getElementById("logout-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            localStorage.removeItem("user");
+            window.location.href = "login.html"; 
+        });
     });
 </script>
 
 <body>
     <div class="wrapper">
+    
         <nav id="sidebar" class="active">
             <div class="sidebar-header">
                 <img src="assets/img/bootstraper-logo.png" alt="bootraper logo" class="app-logo">
@@ -67,13 +71,14 @@
             </ul>
         </nav>
         <div id="body" class="active">
-            <!-- navbar navigation component -->
             <nav class="navbar navbar-expand-lg navbar-white bg-white">
                 <button type="button" id="sidebarCollapse" class="btn btn-light">
                     <i class="fas fa-bars"></i><span></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <ul class="nav navbar-nav ms-auto">
+                        <li class="nav-item dropdown">
+                        </li>
                         <li class="nav-item dropdown">
                             <div class="nav-dropdown">
                                 <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
@@ -82,7 +87,7 @@
                                 </a>  
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                        <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -94,71 +99,17 @@
             <div class="content">
                 <div class="container">
                     <div class="page-title">
-                        <h3>Charts</h3>
+                        <h3>Daftar Nilai Pengguna</h3>
                     </div>
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-12">
                             <div class="card">
-                                <div class="card-header">Line Chart</div>
                                 <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="linechart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Bar Chart</div>
-                                <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="barchart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Pie Chart</div>
-                                <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="piechart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Donut Chart</div>
-                                <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="doughnutchart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Stacked Bar Chart</div>
-                                <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="stackedbarchart"></canvas>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="card">
-                                <div class="card-header">Radar Chart</div>
-                                <div class="card-body">
-                                    <p class="card-title"></p>
-                                    <div class="canvas-wrapper">
-                                        <canvas class="chart" id="radarchart"></canvas>
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered">
+                                            <thead id="table-header"></thead>
+                                            <tbody id="table-body"></tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
@@ -170,8 +121,8 @@
     </div>
     <script src="assets/vendor/jquery/jquery.min.js"></script>
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/chartsjs/Chart.min.js"></script>
-    <script src="assets/js/charts.js"></script>
+    <script src="assets/vendor/datatables/datatables.min.js"></script>
+    <script src="assets/js/initiate-datatables.js"></script>
     <script src="assets/js/script.js"></script>
 </body>
 

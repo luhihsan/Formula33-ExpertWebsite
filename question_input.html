@@ -21,18 +21,23 @@
         const userData = localStorage.getItem("user");
 
         if (!userData) {
-            window.location.href = "login.html";
+            window.location.href = "login.html"; 
             return;
         }
 
         const user = JSON.parse(userData);
         const usernameDisplay = document.getElementById("username-display");
-        
         if (user.username) {
             usernameDisplay.textContent = user.username;
         } else {
             usernameDisplay.textContent = "User";
         }
+
+        document.getElementById("logout-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            localStorage.removeItem("user");
+            window.location.href = "login.html"; 
+        });
     });
 </script>
 
@@ -78,7 +83,7 @@
                                 </a>  
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                        <li><a href="" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                        <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                     </ul>
                                 </div>
                             </div>

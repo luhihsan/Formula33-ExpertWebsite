@@ -5,7 +5,6 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Tables | Bootstrap Simple Admin Template</title>
     <link href="assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
     <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
     <link href="assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
@@ -23,18 +22,23 @@
         const userData = localStorage.getItem("user");
 
         if (!userData) {
-            window.location.href = "login.html";
+            window.location.href = "login.html"; 
             return;
         }
 
         const user = JSON.parse(userData);
         const usernameDisplay = document.getElementById("username-display");
-        
         if (user.username) {
             usernameDisplay.textContent = user.username;
         } else {
             usernameDisplay.textContent = "User";
         }
+
+        document.getElementById("logout-btn").addEventListener("click", function(event) {
+            event.preventDefault();
+            localStorage.removeItem("user");
+            window.location.href = "login.html"; 
+        });
     });
 </script>
 
@@ -82,7 +86,7 @@
                                 </a>  
                                 <div class="dropdown-menu dropdown-menu-end nav-link-menu">
                                     <ul class="nav-list">
-                                       <li><a href="" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                                        <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
                                     </ul>
                                 </div>
                             </div>
@@ -115,33 +119,11 @@
                                             </thead>
                                             <tbody>
                                                 <tr>
-                                                    <th scope="row" class="text-center">1</th>
-                                                    <td>P01</td>
-                                                    <td>Pasif</td>
-                                                    <td>Kosong</td>
-                                                    <td>Sekarang</td>
-                                                    <td class="text-center">
-                                                        <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
-                                                        <a href="" class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row" class="text-center">2</th>
-                                                    <td>N01</td>
-                                                    <td>Nomina</td>
-                                                    <td>Kosong</td>
-                                                    <td>Sekarang</td>
-                                                    <td class="text-center">
-                                                        <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
-                                                        <a href="" class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></a>
-                                                    </td>
-                                                </tr>
-                                                <tr>
-                                                    <th scope="row" class="text-center">3</th>
-                                                    <td>V01</td>
-                                                    <td>Verbal</td>
-                                                    <td>Kosong</td>
-                                                    <td>Sekarang</td>
+                                                    <th scope="row" class="text-center"></th>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
+                                                    <td></td>
                                                     <td class="text-center">
                                                         <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
                                                         <a href="" class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></a>
