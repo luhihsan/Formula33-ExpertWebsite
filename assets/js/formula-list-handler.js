@@ -1,6 +1,7 @@
 import { database } from "./firebase-config.js";
-import { ref, get, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { ref, get, update, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
+// Fungsi untuk memuat daftar formula dari Firebase
 async function loadFormulas() {
     const formulaRef = ref(database, "formula");
 
@@ -53,6 +54,69 @@ async function loadFormulas() {
     }
 }
 
+// Fungsi untuk membuka modal edit dan mengisi data yang akan diedit
+window.editFormula = async function (formulaId) {
+    const formulaRef = ref(database, `formula/${formulaId}`);
+
+    try {
+        const snapshot = await get(formulaRef);
+        if (snapshot.exists()) {
+            const data = snapshot.val();
+
+            // Mengisi form modal dengan data yang diambil dari database
+            document.getElementById("editFormulaId").value = formulaId;
+            document.getElementById("editNamaFormula").value = formulaId;
+            document.getElementById("editJenisKalimat").value = data.jenis_kalimat || "";
+            document.getElementById("editAspek").value = data.aspek || "";
+            document.getElementById("editWaktu").value = data.waktu || "";
+
+            // Menampilkan modal
+            new bootstrap.Modal(document.getElementById("editFormulaModal")).show();
+        } else {
+            alert("Data formula tidak ditemukan.");
+        }
+    } catch (error) {
+        console.error("Error mengambil data formula untuk edit:", error);
+    }
+};
+
+// Fungsi untuk menyimpan perubahan yang diedit ke Firebase
+document.getElementById("editFormulaForm").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const oldFormulaId = document.getElementById("editFormulaId").value;
+    const newFormulaId = document.getElementById("editNamaFormula").value.trim(); // Nama baru formula
+
+    const updatedData = {
+        jenis_kalimat: document.getElementById("editJenisKalimat").value,
+        aspek: document.getElementById("editAspek").value,
+        waktu: document.getElementById("editWaktu").value
+    };
+
+    try {
+        const formulaRef = ref(database, `formula/${oldFormulaId}`);
+
+        if (oldFormulaId !== newFormulaId) {
+            // 1. Tambahkan formula baru dengan nama baru
+            await update(ref(database, `formula/${newFormulaId}`), updatedData);
+
+            // 2. Hapus formula lama jika berhasil membuat yang baru
+            await remove(formulaRef);
+        } else {
+            // Jika nama formula tidak diubah, cukup update data yang ada
+            await update(formulaRef, updatedData);
+        }
+
+        alert("Formula berhasil diperbarui!");
+        loadFormulas(); // Muat ulang tabel
+        bootstrap.Modal.getInstance(document.getElementById("editFormulaModal")).hide(); // Tutup modal
+    } catch (error) {
+        console.error("Gagal memperbarui formula:", error);
+        alert("Terjadi kesalahan saat menyimpan perubahan.");
+    }
+});
+
+// Fungsi untuk menghapus formula dengan konfirmasi
 window.deleteFormula = async function (formulaId) {
     const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus formula "${formulaId}"?`);
 
@@ -69,6 +133,7 @@ window.deleteFormula = async function (formulaId) {
     }
 };
 
+// Panggil fungsi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", () => {
     loadFormulas();
 });

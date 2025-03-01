@@ -94,8 +94,60 @@
                     </ul>
                 </div>
             </nav>
-            <!-- end of navbar navigation -->
+    
             <div class="content">
+                <!-- Modal Edit Formula -->
+                <div class="modal fade" id="editFormulaModal" tabindex="-1" aria-labelledby="editFormulaModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editFormulaModalLabel">Edit Formula</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form id="editFormulaForm">
+                                    <input type="hidden" id="editFormulaId">
+                                    
+                                    <div class="mb-3">
+                                        <label class="form-label">Nama Formula</label>
+                                        <input type="text" id="editNamaFormula" class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Jenis Kalimat</label>
+                                        <select id="editJenisKalimat" class="form-select" required>
+                                            <option value="Verbal">Verbal</option>
+                                            <option value="Pasif">Pasif</option>
+                                            <option value="Nomina">Nomina</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Aspek</label>
+                                        <select id="editAspek" class="form-select" required>
+                                            <option value="ke-sudah-an">ke-sudah-an</option>
+                                            <option value="ke-sedang-an">ke-sedang-an</option>
+                                            <option value="ke-akandatang-an">ke-akandatang-an</option>
+                                            <option value="kosong">kosong</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Waktu</label>
+                                        <select id="editWaktu" class="form-select" required>
+                                            <option value="Sekarang">Sekarang</option>
+                                            <option value="Lampau">Lampau</option>
+                                            <option value="Akan Datang">Akan Datang</option>
+                                        </select>
+                                    </div>
+
+                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="container">
                     <div class="page-title">
                         <h3>Daftar Formula</h3>
