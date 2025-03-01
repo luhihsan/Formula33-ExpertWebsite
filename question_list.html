@@ -98,6 +98,83 @@
             </nav>
             <!-- end of navbar navigation -->
             <div class="content">
+
+                <!-- Modal Edit Soal -->
+                <div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editQuestionModalLabel">Edit Soal Quiz</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <form id="edit-question-form">
+                                <div class="modal-body">
+                                    <input type="hidden" id="edit-question-id">
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Kalimat Asli</label>
+                                        <input type="text" id="edit-kalimat-asli" class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Jenis Kalimat</label>
+                                        <select id="edit-jenis-kalimat" class="form-select" required>
+                                            <option value=""></option>
+                                            <option value="Verbal">Verbal</option>
+                                            <option value="Pasif">Pasif</option>
+                                            <option value="Nomina">Nomina</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Aspek</label>
+                                        <select id="edit-aspek" class="form-select" required>
+                                            <option value=""></option>
+                                            <option value="ke-sudah-an">ke-sudah-an</option>
+                                            <option value="ke-sedang-an">ke-sedang-an</option>
+                                            <option value="ke-akandatang-an">ke-akandatang-an</option>
+                                            <option value="kosong">kosong</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Waktu</label>
+                                        <select id="edit-waktu" class="form-select" required>
+                                            <option value=""></option>
+                                            <option value="Sekarang">Sekarang</option>
+                                            <option value="Lampau">Lampau</option>
+                                            <option value="Akan Datang">Akan Datang</option>
+                                        </select>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Formula</label>
+                                        <input type="text" id="edit-formula" class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Terjemahan Benar</label>
+                                        <input type="text" id="edit-correct-translation" class="form-control" required>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Pilihan Terjemahan 1</label>
+                                        <input type="text" id="edit-incorrect-translation1" class="form-control">
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label class="form-label">Pilihan Terjemahan 2</label>
+                                        <input type="text" id="edit-incorrect-translation2" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="container">
                     <div class="page-title">
                         <h3>Daftar Soal</h3>

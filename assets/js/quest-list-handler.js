@@ -1,36 +1,37 @@
 import { database } from "./firebase-config.js";
-import { ref, get, remove } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
+import { ref, get, remove, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
+// Fungsi untuk memuat daftar soal dari Firebase
 async function loadQuestions() {
     const questionRef = ref(database, "question");
 
     try {
         const snapshot = await get(questionRef);
+        const tableBody = document.getElementById("question-table-body");
+
+        if (!tableBody) {
+            console.error("Tabel tidak ditemukan!");
+            return;
+        }
+
+        tableBody.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
 
         if (snapshot.exists()) {
             const data = snapshot.val();
-            const tableBody = document.querySelector("table tbody");
-
-            tableBody.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
-
-            let rowIndex = 1; // Untuk nomor urut
+            let rowIndex = 1;
 
             Object.keys(data).forEach((key) => {
                 const soal = data[key];
 
-                // Pastikan nilai ada, jika tidak, berikan nilai default
                 const kalimatAsli = soal.kalimat_asli || "-";
                 const jenisKalimat = soal.jenis_kalimat || "-";
                 const aspek = soal.aspek || "-";
                 const waktu = soal.waktu || "-";
                 const formula = soal.formula || "-";
                 const correctTranslation = soal.correct_translation || "-";
-                
-                // Pastikan incorrect_translation berbentuk array dan memiliki setidaknya 2 nilai
-                const incorrectTranslation1 = soal.incorrect_translation && soal.incorrect_translation[0] ? soal.incorrect_translation[0] : "-";
-                const incorrectTranslation2 = soal.incorrect_translation && soal.incorrect_translation[1] ? soal.incorrect_translation[1] : "-";
+                const incorrectTranslation1 = soal.incorrect_translation?.[0] || "-";
+                const incorrectTranslation2 = soal.incorrect_translation?.[1] || "-";
 
-                // Buat baris baru dalam tabel
                 const row = document.createElement("tr");
                 row.innerHTML = `
                     <th scope="row" class="text-center">${rowIndex++}</th>
@@ -50,17 +51,15 @@ async function loadQuestions() {
 
                 tableBody.appendChild(row);
             });
-
         } else {
             console.log("Tidak ada data soal yang ditemukan.");
         }
-
     } catch (error) {
         console.error("Error mengambil data dari Firebase:", error);
     }
 }
 
-// Fungsi Hapus Soal Quiz dengan Konfirmasi
+// Fungsi Menghapus Soal dengan Konfirmasi
 window.deleteQuestion = async function (questionId) {
     const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus soal ini?`);
 
@@ -76,6 +75,68 @@ window.deleteQuestion = async function (questionId) {
         }
     }
 };
+
+// Fungsi Menampilkan Data Soal ke Modal Edit
+window.editQuestion = async function (questionId) {
+    try {
+        const questionRef = ref(database, `question/${questionId}`);
+        const snapshot = await get(questionRef);
+
+        if (snapshot.exists()) {
+            const soal = snapshot.val();
+
+            document.getElementById("edit-question-id").value = questionId;
+            document.getElementById("edit-kalimat-asli").value = soal.kalimat_asli || "";
+            document.getElementById("edit-jenis-kalimat").value = soal.jenis_kalimat || "";
+            document.getElementById("edit-aspek").value = soal.aspek || "";
+            document.getElementById("edit-waktu").value = soal.waktu || "";
+            document.getElementById("edit-formula").value = soal.formula || "";
+            document.getElementById("edit-correct-translation").value = soal.correct_translation || "";
+            document.getElementById("edit-incorrect-translation1").value = soal.incorrect_translation?.[0] || "";
+            document.getElementById("edit-incorrect-translation2").value = soal.incorrect_translation?.[1] || "";
+
+            const editModal = new bootstrap.Modal(document.getElementById("editQuestionModal"));
+            editModal.show();
+        } else {
+            alert("Data soal tidak ditemukan.");
+        }
+    } catch (error) {
+        console.error("Error saat membuka modal edit:", error);
+    }
+};
+
+// Fungsi Menyimpan Perubahan Soal
+document.getElementById("edit-question-form").addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const questionId = document.getElementById("edit-question-id").value;
+    const updatedData = {
+        kalimat_asli: document.getElementById("edit-kalimat-asli").value,
+        jenis_kalimat: document.getElementById("edit-jenis-kalimat").value,
+        aspek: document.getElementById("edit-aspek").value,
+        waktu: document.getElementById("edit-waktu").value,
+        formula: document.getElementById("edit-formula").value,
+        correct_translation: document.getElementById("edit-correct-translation").value,
+        incorrect_translation: [
+            document.getElementById("edit-incorrect-translation1").value,
+            document.getElementById("edit-incorrect-translation2").value,
+        ],
+    };
+
+    try {
+        const questionRef = ref(database, `question/${questionId}`);
+        await update(questionRef, updatedData);
+
+        alert("Soal berhasil diperbarui.");
+        const editModal = bootstrap.Modal.getInstance(document.getElementById("editQuestionModal"));
+        editModal.hide();
+
+        loadQuestions();
+    } catch (error) {
+        console.error("Gagal memperbarui soal:", error);
+        alert("Terjadi kesalahan saat memperbarui soal.");
+    }
+});
 
 // Panggil fungsi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", () => {
