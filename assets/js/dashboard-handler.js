@@ -200,6 +200,104 @@ async function fetchPerfectScoreAttempts() {
     return perfectAttempts;
 }
 
+// Fungsi untuk menghitung Distribusi Skor
+async function fetchScoreDistribution() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return [0, 0, 0, 0];
+
+    let scoreBuckets = [0, 0, 0, 0]; // 0-50, 51-70, 71-85, 86-100
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            Object.values(user.quizHistory).forEach(attempt => {
+                let score = attempt.score;
+                if (score <= 50) scoreBuckets[0]++;
+                else if (score <= 70) scoreBuckets[1]++;
+                else if (score <= 85) scoreBuckets[2]++;
+                else scoreBuckets[3]++;
+            });
+        }
+    });
+
+    return scoreBuckets;
+}
+
+// Fungsi untuk menghitung Tren Rata-rata Skor dari Waktu ke Waktu
+async function fetchAverageScoreOverTime() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return { dates: [], averages: [] };
+
+    let scoreData = {}; // { "2025-02-01": [22, 45], "2025-02-02": [50] }
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            Object.values(user.quizHistory).forEach(attempt => {
+                let date = attempt.timestamp.split(" ")[0]; // Ambil tanggal dari timestamp
+                if (!scoreData[date]) {
+                    scoreData[date] = [];
+                }
+                scoreData[date].push(attempt.score);
+            });
+        }
+    });
+
+    let sortedDates = Object.keys(scoreData).sort(); // Urutkan tanggal
+    let averages = sortedDates.map(date => {
+        let scores = scoreData[date];
+        return scores.reduce((a, b) => a + b, 0) / scores.length;
+    });
+
+    return { dates: sortedDates, averages: averages };
+}
+
+// Fungsi untuk menggambar chart menggunakan Chart.js
+async function renderCharts() {
+    const scoreDistribution = await fetchScoreDistribution();
+    const { dates, averages } = await fetchAverageScoreOverTime();
+
+    // Chart 1: Distribusi Skor
+    new Chart(document.getElementById("scoreDistributionChart"), {
+        type: "bar",
+        data: {
+            labels: ["0-50 (Kurang)", "51-70 (Cukup)", "71-85 (Baik)", "86-100 (Sangat Baik)"],
+            datasets: [{
+                label: "Jumlah Pengguna",
+                data: scoreDistribution,
+                backgroundColor: ["#ff4d4d", "#ffcc00", "#66cc66", "#0080ff"],
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+
+    // Chart 2: Tren Rata-rata Skor dari Waktu ke Waktu
+    new Chart(document.getElementById("averageScoreChart"), {
+        type: "line",
+        data: {
+            labels: dates,
+            datasets: [{
+                label: "Rata-rata Skor",
+                data: averages,
+                borderColor: "#007bff",
+                fill: false
+            }]
+        },
+        options: {
+            responsive: true,
+            scales: {
+                x: { title: { display: true, text: "Tanggal" } },
+                y: { title: { display: true, text: "Rata-rata Skor" } }
+            }
+        }
+    });
+}
+
 async function loadDashboardData() {
     try {
         const userCount = await fetchUserCount();
@@ -237,6 +335,7 @@ async function loadDashboardData() {
 // Jalankan saat halaman dimuat
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboardData();
+    renderCharts();
 });
 
 
