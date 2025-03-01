@@ -117,7 +117,7 @@
                                                 </tr>
                                                 
                                             </thead>
-                                            <tbody>
+                                            <tbody id="formula-table-body">
                                                 <tr>
                                                     <th scope="row" class="text-center"></th>
                                                     <td></td>
@@ -125,9 +125,9 @@
                                                     <td></td>
                                                     <td></td>
                                                     <td class="text-center">
-                                                        <a href="" class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></a>
-                                                        <a href="" class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></a>
-                                                    </td>
+                                                        <button class="btn btn-outline-info btn-rounded" onclick="editFormula('${formulaId}')"><i class="fas fa-pen"></i></button>
+                                                        <button class="btn btn-outline-danger btn-rounded" onclick="deleteFormula('${formulaId}')"><i class="fas fa-trash"></i></button>
+                                                    </td>                                                    
                                                 </tr>
                                             </tbody>
                                         </table>
