@@ -123,6 +123,83 @@ async function fetchAverageQuizAttempts() {
     return totalUsers > 0 ? Math.round(totalAttempts / totalUsers) : 0;
 }
 
+// Fungsi untuk menghitung akurasi jawaban pengguna
+async function fetchAccuracyPercentage() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return 0;
+
+    let totalScore = 0;
+    let totalMaxScore = 0;
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            const attempts = Object.values(user.quizHistory);
+            totalScore += attempts.reduce((sum, attempt) => sum + attempt.score, 0);
+            totalMaxScore += attempts.length * 100; // Anggap setiap quiz memiliki nilai maksimal 100
+        }
+    });
+
+    return totalMaxScore > 0 ? ((totalScore / totalMaxScore) * 100).toFixed(2) : 0;
+}
+
+// Fungsi untuk mendapatkan percobaan quiz tertinggi
+async function fetchHighestQuizAttempts() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return 0;
+
+    let maxAttempts = 0;
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            const attemptCount = Object.keys(user.quizHistory).length;
+            if (attemptCount > maxAttempts) {
+                maxAttempts = attemptCount;
+            }
+        }
+    });
+
+    return maxAttempts;
+}
+
+// Fungsi untuk mendapatkan percobaan quiz terendah
+async function fetchLowestQuizAttempts() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return 0;
+
+    let minAttempts = Infinity;
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            const attemptCount = Object.keys(user.quizHistory).length;
+            if (attemptCount < minAttempts) {
+                minAttempts = attemptCount;
+            }
+        }
+    });
+
+    return minAttempts === Infinity ? 0 : minAttempts;
+}
+
+// Fungsi untuk menghitung jumlah percobaan dengan nilai sempurna (100)
+async function fetchPerfectScoreAttempts() {
+    const quizRef = ref(database, "quiz_result");
+    const snapshot = await get(quizRef);
+    if (!snapshot.exists()) return 0;
+
+    let perfectAttempts = 0;
+
+    Object.values(snapshot.val()).forEach(user => {
+        if (user.quizHistory) {
+            perfectAttempts += Object.values(user.quizHistory).filter(q => q.score === 100).length;
+        }
+    });
+
+    return perfectAttempts;
+}
+
 async function loadDashboardData() {
     try {
         const userCount = await fetchUserCount();
@@ -132,20 +209,26 @@ async function loadDashboardData() {
         const { top, lowest } = await fetchTopAndLowestScorer();
         const { count: usersAboveAvg, totalUsers } = await fetchUsersAboveAverage();
         const avgAttempts = await fetchAverageQuizAttempts();
+        const accuracy = await fetchAccuracyPercentage();
+        const highestAttempts = await fetchHighestQuizAttempts();
+        const lowestAttempts = await fetchLowestQuizAttempts();
+        const perfectScoreAttempts = await fetchPerfectScoreAttempts();
+
 
         document.getElementById("user-count").textContent = userCount;
         document.getElementById("question-count").textContent = questionCount;
         document.getElementById("formula-count").textContent = formulaCount;
         document.getElementById("avg-score").textContent = avgScore;
-
         document.getElementById("top-scorer-name").textContent = top.username;
         document.getElementById("top-scorer-score").textContent = top.score;
         document.getElementById("lowest-scorer-score").textContent = lowest;
-
         document.getElementById("users-above-avg").textContent = usersAboveAvg;
         document.getElementById("users-above-avg-footer").textContent = `Dari keseluruhan jumlah ${userCount} user `;
-
         document.getElementById("avg-quiz-attempts").textContent = avgAttempts;
+        document.getElementById("accuracy-percentage").textContent = accuracy + "%";
+        document.getElementById("highest-attempts").textContent = highestAttempts;
+        document.getElementById("lowest-attempts").textContent = lowestAttempts;
+        document.getElementById("perfect-score-attempts").textContent = perfectScoreAttempts;
     } catch (error) {
         console.error("Error fetching dashboard data:", error);
     }
