@@ -15,6 +15,7 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-storage.js"></script>
+    <script type="module" src="assets/js/dashboard-handler.js"></script>
 
 </head>
 
@@ -94,7 +95,7 @@
                     </ul>
                 </div>
             </nav>
-            <!-- end of navbar navigation -->
+
             <div class="content">
                 <div class="container">
                     <div class="row">
@@ -110,100 +111,80 @@
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="icon-big text-center">
-                                                <i class="teal fas fa-shopping-cart"></i>
+                                                <i class="teal fas fa-users"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="detail">
-                                                <p class="detail-subtitle">New Orders</p>
-                                                <span class="number">6,267</span>
+                                                <p class="detail-subtitle">Jumlah Pengguna</p>
+                                                <span class="number" id="user-count">Loading...</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="footer">
-                                        <hr />
-                                        <div class="stats">
-                                            <i class="fas fa-calendar"></i> For this Week
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
                             <div class="card">
                                 <div class="content">
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="icon-big text-center">
-                                                <i class="olive fas fa-money-bill-alt"></i>
+                                                <i class="olive fas fa-file-alt"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="detail">
-                                                <p class="detail-subtitle">Revenue</p>
-                                                <span class="number">$180,900</span>
+                                                <p class="detail-subtitle">Jumlah Soal Quiz</p>
+                                                <span class="number" id="question-count">Loading...</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="footer">
-                                        <hr />
-                                        <div class="stats">
-                                            <i class="fas fa-calendar"></i> For this Month
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
                             <div class="card">
                                 <div class="content">
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="icon-big text-center">
-                                                <i class="violet fas fa-eye"></i>
+                                                <i class="violet fas fa-table"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="detail">
-                                                <p class="detail-subtitle">Page views</p>
-                                                <span class="number">28,210</span>
+                                                <p class="detail-subtitle">Jumlah Formula</p>
+                                                <span class="number" id="formula-count">Loading...</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="footer">
-                                        <hr />
-                                        <div class="stats">
-                                            <i class="fas fa-stopwatch"></i> For this Month
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="col-sm-6 col-md-6 col-lg-3 mt-3">
                             <div class="card">
                                 <div class="content">
                                     <div class="row">
                                         <div class="col-sm-4">
                                             <div class="icon-big text-center">
-                                                <i class="orange fas fa-envelope"></i>
+                                                <i class="orange fas fa-chart-bar"></i>
                                             </div>
                                         </div>
                                         <div class="col-sm-8">
                                             <div class="detail">
-                                                <p class="detail-subtitle">Support Request</p>
-                                                <span class="number">75</span>
+                                                <p class="detail-subtitle">Rata-Rata Nilai Quiz</p>
+                                                <span class="number" id="avg-score">Loading...</span>
                                             </div>
-                                        </div>
-                                    </div>
-                                    <div class="footer">
-                                        <hr />
-                                        <div class="stats">
-                                            <i class="fas fa-envelope-open-text"></i> For this week
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        
                     </div>
                     <div class="row">
                         <div class="col-md-6">
