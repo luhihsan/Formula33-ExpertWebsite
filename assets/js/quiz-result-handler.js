@@ -56,17 +56,21 @@ async function loadQuizResults() {
         const attempts = Object.entries(quizHistory).map(([key, data]) => ({
             score: data.score,
             timestamp: data.timestamp
-        })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); // Urutkan berdasarkan waktu
+        })).sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp)); 
 
-        // Tambahkan nilai quiz ke dalam kolom
         for (let i = 0; i < maxAttempts; i++) {
             if (i < attempts.length) {
+                const score = attempts[i].score;
+                const timestamp = attempts[i].timestamp;
+                const checkImg = score >= 70 
+                    ? `<br><img src="assets/img/check.png" alt="Check" style="width:20px; height:20px; margin-top:5px;">` 
+                    : "";
                 row += `<td class="text-center">
-                            <b>${attempts[i].score}</b><br>
-                            <small>${attempts[i].timestamp}</small>
+                            <b>${score}</b>${checkImg}<br>
+                            <small>${timestamp}</small>
                         </td>`;
             } else {
-                row += `<td class="text-center">-</td>`; // Jika tidak ada percobaan, isi dengan "-"
+                row += `<td class="text-center">-</td>`;
             }
         }
 
