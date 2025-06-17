@@ -31,6 +31,7 @@ async function loadQuestions() {
                 const correctTranslation = soal.correct_translation || "-";
                 const incorrectTranslation1 = soal.incorrect_translation?.[0] || "-";
                 const incorrectTranslation2 = soal.incorrect_translation?.[1] || "-";
+                const level = soal.level || "-"; // Tambahkan ini untuk level
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -43,6 +44,7 @@ async function loadQuestions() {
                     <td>${correctTranslation}</td>
                     <td>${incorrectTranslation1}</td>
                     <td>${incorrectTranslation2}</td>
+                    <td class="text-center">${level}</td> <!-- Tambahkan kolom level -->
                     <td class="text-center">
                         <button class="btn btn-outline-info btn-rounded" onclick="editQuestion('${key}')"><i class="fas fa-pen"></i></button>
                         <button class="btn btn-outline-danger btn-rounded" onclick="deleteQuestion('${key}')"><i class="fas fa-trash"></i></button>
@@ -94,6 +96,7 @@ window.editQuestion = async function (questionId) {
             document.getElementById("edit-correct-translation").value = soal.correct_translation || "";
             document.getElementById("edit-incorrect-translation1").value = soal.incorrect_translation?.[0] || "";
             document.getElementById("edit-incorrect-translation2").value = soal.incorrect_translation?.[1] || "";
+            document.getElementById("edit-level").value = soal.level || ""; // Tambahkan ini
 
             const editModal = new bootstrap.Modal(document.getElementById("editQuestionModal"));
             editModal.show();
@@ -121,6 +124,7 @@ document.getElementById("edit-question-form").addEventListener("submit", async f
             document.getElementById("edit-incorrect-translation1").value,
             document.getElementById("edit-incorrect-translation2").value,
         ],
+        level: document.getElementById("edit-level").value // Tambahkan ini
     };
 
     try {
