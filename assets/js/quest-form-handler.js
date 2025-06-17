@@ -13,6 +13,14 @@ async function simpanSoal(event) {
     const correct_trans = document.querySelector('input[name="correct_trans"]').value;
     const incorrect_trans1 = document.querySelector('input[name="incorrect_trans1"]').value;
     const incorrect_trans2 = document.querySelector('input[name="incorrect_trans2"]').value;
+    const level = document.querySelector('select[name="level"]').value;
+
+    // Validasi form
+    if (!kalimat_asli || !jenis_kalimat || !aspek || !waktu || !formula || 
+        !correct_trans || !incorrect_trans1 || !incorrect_trans2 || !level) {
+        alert("Semua field harus diisi!");
+        return;
+    }
 
     // Ambil referensi ke database
     const questionRef = ref(database, "question");
@@ -46,7 +54,8 @@ async function simpanSoal(event) {
             incorrect_translation: [incorrect_trans1, incorrect_trans2], // Masukkan sebagai array
             jenis_kalimat: jenis_kalimat,
             kalimat_asli: kalimat_asli,
-            waktu: waktu
+            waktu: waktu,
+            level: level // Tambahkan level soal
         };
 
         // Simpan data ke Firebase dengan ID yang sudah ditentukan
@@ -56,6 +65,7 @@ async function simpanSoal(event) {
         document.querySelector("form").reset(); // Reset form setelah submit
     } catch (error) {
         console.error("Error menyimpan soal:", error);
+        alert("Terjadi error saat menyimpan soal. Silakan coba lagi.");
     }
 }
 
