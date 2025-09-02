@@ -1,6 +1,5 @@
 <!doctype html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -15,224 +14,188 @@
 
     <script type="module" src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/quest-list-handler.js"></script>
-
 </head>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const userData = localStorage.getItem("user");
+  document.addEventListener("DOMContentLoaded", () => {
+    const userData = localStorage.getItem("user");
+    if (!userData) {
+      window.location.href = "login.html";
+      return;
+    }
+    const user = JSON.parse(userData);
+    const usernameDisplay = document.getElementById("username-display");
+    usernameDisplay.textContent = user.username ? user.username : "User";
 
-        if (!userData) {
-            window.location.href = "login.html"; 
-            return;
-        }
-
-        const user = JSON.parse(userData);
-        const usernameDisplay = document.getElementById("username-display");
-        if (user.username) {
-            usernameDisplay.textContent = user.username;
-        } else {
-            usernameDisplay.textContent = "User";
-        }
-
-        document.getElementById("logout-btn").addEventListener("click", function(event) {
-            event.preventDefault();
-            localStorage.removeItem("user");
-            window.location.href = "login.html"; 
-        });
+    document.getElementById("logout-btn").addEventListener("click", function (event) {
+      event.preventDefault();
+      localStorage.removeItem("user");
+      window.location.href = "login.html";
     });
+  });
 </script>
 
 <body>
-    <div class="wrapper">
-    
-        <nav id="sidebar" class="active">
-            <div class="sidebar-header text-center">
-                <img src="assets/img/expert-logo.png" alt="App Logo" class="app-logo" width="120">
-            </div>
-            <ul class="list-unstyled components text-secondary">
-                <li>
-                    <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="question_input.html"><i class="fas fa-file-signature"></i> Input Soal Quiz</a>
-                </li>
-                <li>
-                    <a href="formula_input.html"><i class="fas fa-calculator"></i> Input Formula</a>
-                </li>
-                <li>
-                    <a href="charts.html"><i class="fas fa-chart-line"></i> Statistik Nilai</a>
-                </li>
-                <li>
-                    <a href="formula_list.html"><i class="fas fa-list-alt"></i> Daftar Formula</a>
-                </li>
-                <li>
-                    <a href="question_list.html"><i class="fas fa-list-alt"></i> Daftar Soal</a>
-                </li>
-            </ul>
-        </nav>
-        <div id="body" class="active">
-            <nav class="navbar navbar-expand-lg navbar-white bg-white">
-                <button type="button" id="sidebarCollapse" class="btn btn-light">
-                    <i class="fas fa-bars"></i><span></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                        </li>
-                        <li class="nav-item dropdown">
-                            <div class="nav-dropdown">
-                                <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> <span id="username-display">Loading...</span> 
-                                    <i style="font-size: .8em;" class="fas fa-caret-down"></i>
-                                </a>  
-                                <div class="dropdown-menu dropdown-menu-end nav-link-menu">
-                                    <ul class="nav-list">
-                                        <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+  <div class="wrapper">
+    <nav id="sidebar" class="active">
+      <div class="sidebar-header text-center">
+        <img src="assets/img/expert-logo.png" alt="App Logo" class="app-logo" width="120">
+      </div>
+      <ul class="list-unstyled components text-secondary">
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="question_input.html"><i class="fas fa-file-signature"></i> Input Soal Quiz</a></li>
+        <li><a href="formula_input.html"><i class="fas fa-calculator"></i> Input Formula</a></li>
+        <li><a href="charts.html"><i class="fas fa-chart-line"></i> Statistik Nilai</a></li>
+        <li><a href="formula_list.html"><i class="fas fa-list-alt"></i> Daftar Formula</a></li>
+        <li><a href="question_list.html"><i class="fas fa-list-alt"></i> Daftar Soal</a></li>
+      </ul>
+    </nav>
+
+    <div id="body" class="active">
+      <nav class="navbar navbar-expand-lg navbar-white bg-white">
+        <button type="button" id="sidebarCollapse" class="btn btn-light">
+          <i class="fas fa-bars"></i><span></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="nav navbar-nav ms-auto">
+            <li class="nav-item dropdown"></li>
+            <li class="nav-item dropdown">
+              <div class="nav-dropdown">
+                <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-user"></i> <span id="username-display">Loading...</span>
+                  <i style="font-size:.8em;" class="fas fa-caret-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end nav-link-menu">
+                  <ul class="nav-list">
+                    <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                  </ul>
                 </div>
-            </nav>
-            <!-- end of navbar navigation -->
-            <div class="content">
-
-                <!-- Modal Edit Soal -->
-                <div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editQuestionModalLabel">Edit Soal Quiz</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <form id="edit-question-form">
-                                <div class="modal-body">
-                                    <input type="hidden" id="edit-question-id">
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Kalimat Asli</label>
-                                        <input type="text" id="edit-kalimat-asli" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Jenis Kalimat</label>
-                                        <select id="edit-jenis-kalimat" class="form-select" required>
-                                            <option value=""></option>
-                                            <option value="Verbal">Verbal</option>
-                                            <option value="Pasif">Pasif</option>
-                                            <option value="Nomina">Nomina</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Aspek</label>
-                                        <select id="edit-aspek" class="form-select" required>
-                                            <option value=""></option>
-                                            <option value="ke-sudah-an">ke-sudah-an</option>
-                                            <option value="ke-sedang-an">ke-sedang-an</option>
-                                            <option value="ke-akandatang-an">ke-akandatang-an</option>
-                                            <option value="kosong">kosong</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Waktu</label>
-                                        <select id="edit-waktu" class="form-select" required>
-                                            <option value=""></option>
-                                            <option value="Sekarang">Sekarang</option>
-                                            <option value="Lampau">Lampau</option>
-                                            <option value="Akan Datang">Akan Datang</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Formula</label>
-                                        <input type="text" id="edit-formula" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Terjemahan Benar</label>
-                                        <input type="text" id="edit-correct-translation" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Pilihan Terjemahan 1</label>
-                                        <input type="text" id="edit-incorrect-translation1" class="form-control">
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Pilihan Terjemahan 2</label>
-                                        <input type="text" id="edit-incorrect-translation2" class="form-control">
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="container">
-                    <div class="page-title">
-                        <h3>Daftar Soal</h3>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" style="text-align: center;">No</th>
-                                                    <th scope="col" style="text-align: center;">Kalimat Asli</th>
-                                                    <th scope="col" style="text-align: center;">Jenis Kalimat</th>
-                                                    <th scope="col" style="text-align: center;">Aspek</th>
-                                                    <th scope="col" style="text-align: center;">Waktu</th>
-                                                    <th scope="col" style="text-align: center;">Formula</th>
-                                                    <th scope="col" style="text-align: center;">Terjemahan Benar</th>
-                                                    <th scope="col" style="text-align: center;">Pilihan Terjemahan 1</th>
-                                                    <th scope="col" style="text-align: center;">Pilihan Terjemahan 2</th>
-                                                    <th scope="col" style="text-align: center;">Level Soal</th>
-                                                    <th scope="col" style="text-align: center;">Action</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody id="question-table-body">
-                                                <tr>
-                                                    <th scope="row" class="text-center"></th>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="text-center"></td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-outline-info btn-rounded"><i class="fas fa-pen"></i></button>
-                                                        <button class="btn btn-outline-danger btn-rounded"><i class="fas fa-trash"></i></button>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>    
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              </div>
+            </li>
+          </ul>
         </div>
-    </div>
-    <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/datatables/datatables.min.js"></script>
-    <script src="assets/js/initiate-datatables.js"></script>
-    <script src="assets/js/script.js"></script>
-</body>
+      </nav>
 
+      <div class="content">
+        <!-- Modal Edit Soal -->
+        <div class="modal fade" id="editQuestionModal" tabindex="-1" aria-labelledby="editQuestionModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editQuestionModalLabel">Edit Soal Quiz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <form id="edit-question-form">
+                <div class="modal-body">
+                  <input type="hidden" id="edit-question-id">
+
+                  <div class="mb-3">
+                    <label class="form-label">Kalimat Asli</label>
+                    <input type="text" id="edit-kalimat-asli" class="form-control" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Jenis Kalimat</label>
+                    <select id="edit-jenis-kalimat" class="form-select" required>
+                      <option value=""></option>
+                      <option value="Verbal">Verbal</option>
+                      <option value="Pasif">Pasif</option>
+                      <option value="Nomina">Nomina</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Aspek</label>
+                    <select id="edit-aspek" class="form-select" required>
+                      <option value=""></option>
+                      <option value="ke-sudah-an">ke-sudah-an</option>
+                      <option value="ke-sedang-an">ke-sedang-an</option>
+                      <option value="ke-akandatang-an">ke-akandatang-an</option>
+                      <option value="kosong">kosong</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Waktu</label>
+                    <select id="edit-waktu" class="form-select" required>
+                      <option value=""></option>
+                      <option value="Sekarang">Sekarang</option>
+                      <option value="Lampau">Lampau</option>
+                      <option value="Akan Datang">Akan Datang</option>
+                    </select>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Formula</label>
+                    <input type="text" id="edit-formula" class="form-control" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Terjemahan Benar</label>
+                    <input type="text" id="edit-correct-translation" class="form-control" required>
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Pilihan Terjemahan 1</label>
+                    <input type="text" id="edit-incorrect-translation1" class="form-control">
+                  </div>
+
+                  <div class="mb-3">
+                    <label class="form-label">Pilihan Terjemahan 2</label>
+                    <input type="text" id="edit-incorrect-translation2" class="form-control">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tabel -->
+        <div class="container">
+          <div class="page-title">
+            <h3>Daftar Soal</h3>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="text-center">No</th>
+                          <th class="text-center">Kalimat Asli</th>
+                          <th class="text-center">Jenis Kalimat</th>
+                          <th class="text-center">Aspek</th>
+                          <th class="text-center">Waktu</th>
+                          <th class="text-center">Formula</th>
+                          <th class="text-center">Terjemahan Benar</th>
+                          <th class="text-center">Pilihan Terjemahan 1</th>
+                          <th class="text-center">Pilihan Terjemahan 2</th>
+                          <th class="text-center">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="question-table-body">
+                        <!-- baris dirender via JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- col -->
+          </div> <!-- row -->
+        </div> <!-- container -->
+      </div> <!-- content -->
+    </div> <!-- body -->
+  </div> <!-- wrapper -->
+
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/datatables/datatables.min.js"></script>
+  <script src="assets/js/initiate-datatables.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
 </html>

@@ -1,7 +1,6 @@
 import { database } from "./firebase-config.js";
 import { ref, get, remove, update } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
-// Fungsi untuk memuat daftar soal dari Firebase
 async function loadQuestions() {
     const questionRef = ref(database, "question");
 
@@ -14,7 +13,7 @@ async function loadQuestions() {
             return;
         }
 
-        tableBody.innerHTML = ""; // Kosongkan tabel sebelum diisi ulang
+        tableBody.innerHTML = ""; 
 
         if (snapshot.exists()) {
             const data = snapshot.val();
@@ -31,7 +30,6 @@ async function loadQuestions() {
                 const correctTranslation = soal.correct_translation || "-";
                 const incorrectTranslation1 = soal.incorrect_translation?.[0] || "-";
                 const incorrectTranslation2 = soal.incorrect_translation?.[1] || "-";
-                const level = soal.level || "-"; // Tambahkan ini untuk level
 
                 const row = document.createElement("tr");
                 row.innerHTML = `
@@ -44,7 +42,6 @@ async function loadQuestions() {
                     <td>${correctTranslation}</td>
                     <td>${incorrectTranslation1}</td>
                     <td>${incorrectTranslation2}</td>
-                    <td class="text-center">${level}</td> <!-- Tambahkan kolom level -->
                     <td class="text-center">
                         <button class="btn btn-outline-info btn-rounded" onclick="editQuestion('${key}')"><i class="fas fa-pen"></i></button>
                         <button class="btn btn-outline-danger btn-rounded" onclick="deleteQuestion('${key}')"><i class="fas fa-trash"></i></button>
@@ -61,7 +58,6 @@ async function loadQuestions() {
     }
 }
 
-// Fungsi Menghapus Soal dengan Konfirmasi
 window.deleteQuestion = async function (questionId) {
     const confirmDelete = confirm(`Apakah Anda yakin ingin menghapus soal ini?`);
 
@@ -70,7 +66,7 @@ window.deleteQuestion = async function (questionId) {
             const questionRef = ref(database, `question/${questionId}`);
             await remove(questionRef);
             alert(`Soal berhasil dihapus.`);
-            loadQuestions(); // Refresh daftar soal
+            loadQuestions(); 
         } catch (error) {
             console.error("Gagal menghapus soal:", error);
             alert("Terjadi kesalahan saat menghapus soal.");
@@ -78,7 +74,6 @@ window.deleteQuestion = async function (questionId) {
     }
 };
 
-// Fungsi Menampilkan Data Soal ke Modal Edit
 window.editQuestion = async function (questionId) {
     try {
         const questionRef = ref(database, `question/${questionId}`);
@@ -96,7 +91,6 @@ window.editQuestion = async function (questionId) {
             document.getElementById("edit-correct-translation").value = soal.correct_translation || "";
             document.getElementById("edit-incorrect-translation1").value = soal.incorrect_translation?.[0] || "";
             document.getElementById("edit-incorrect-translation2").value = soal.incorrect_translation?.[1] || "";
-            document.getElementById("edit-level").value = soal.level || ""; // Tambahkan ini
 
             const editModal = new bootstrap.Modal(document.getElementById("editQuestionModal"));
             editModal.show();
@@ -108,7 +102,6 @@ window.editQuestion = async function (questionId) {
     }
 };
 
-// Fungsi Menyimpan Perubahan Soal
 document.getElementById("edit-question-form").addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -124,7 +117,6 @@ document.getElementById("edit-question-form").addEventListener("submit", async f
             document.getElementById("edit-incorrect-translation1").value,
             document.getElementById("edit-incorrect-translation2").value,
         ],
-        level: document.getElementById("edit-level").value // Tambahkan ini
     };
 
     try {
@@ -142,7 +134,6 @@ document.getElementById("edit-question-form").addEventListener("submit", async f
     }
 });
 
-// Panggil fungsi saat halaman dimuat
 document.addEventListener("DOMContentLoaded", () => {
     loadQuestions();
 });

@@ -1,203 +1,183 @@
 <!doctype html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-     <title>List Formula-Formula 33</title>
-    <link href="assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet">
-    <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet">
-    <link href="assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet">
-    <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
-    <link href="assets/vendor/datatables/datatables.min.css" rel="stylesheet">
-    <link href="assets/css/master.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+  <title>List Formula-Formula 33</title>
 
-    <script type="module" src="assets/js/firebase-config.js"></script>
-    <script type="module" src="assets/js/formula-list-handler.js"></script>
+  <!-- Vendors CSS -->
+  <link href="assets/vendor/fontawesome/css/fontawesome.min.css" rel="stylesheet" />
+  <link href="assets/vendor/fontawesome/css/solid.min.css" rel="stylesheet" />
+  <link href="assets/vendor/fontawesome/css/brands.min.css" rel="stylesheet" />
+  <link href="assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+  <link href="assets/vendor/datatables/datatables.min.css" rel="stylesheet" />
+  <link href="assets/css/master.css" rel="stylesheet" />
 
+  <!-- Firebase + handler -->
+  <script type="module" src="assets/js/firebase-config.js"></script>
+  <script type="module" src="assets/js/formula-list-handler.js"></script>
 </head>
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const userData = localStorage.getItem("user");
-
-        if (!userData) {
-            window.location.href = "login.html"; 
-            return;
-        }
-
-        const user = JSON.parse(userData);
-        const usernameDisplay = document.getElementById("username-display");
-        if (user.username) {
-            usernameDisplay.textContent = user.username;
-        } else {
-            usernameDisplay.textContent = "User";
-        }
-
-        document.getElementById("logout-btn").addEventListener("click", function(event) {
-            event.preventDefault();
-            localStorage.removeItem("user");
-            window.location.href = "login.html"; 
-        });
-    });
-</script>
-
 <body>
-    <div class="wrapper">
-        <nav id="sidebar" class="active">
-            <div class="sidebar-header text-center">
-                <img src="assets/img/expert-logo.png" alt="App Logo" class="app-logo" width="120">
-            </div>
-            <ul class="list-unstyled components text-secondary">
-                <li>
-                    <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
-                </li>
-                <li>
-                    <a href="question_input.html"><i class="fas fa-file-signature"></i> Input Soal Quiz</a>
-                </li>
-                <li>
-                    <a href="formula_input.html"><i class="fas fa-calculator"></i> Input Formula</a>
-                </li>
-                <li>
-                    <a href="charts.html"><i class="fas fa-chart-line"></i> Statistik Nilai</a>
-                </li>
-                <li>
-                    <a href="formula_list.html"><i class="fas fa-list-alt"></i> Daftar Formula</a>
-                </li>
-                <li>
-                    <a href="question_list.html"><i class="fas fa-list-alt"></i> Daftar Soal</a>
-                </li>
-            </ul>
-        </nav>
-        <div id="body" class="active">
-            <nav class="navbar navbar-expand-lg navbar-white bg-white">
-                <button type="button" id="sidebarCollapse" class="btn btn-light">
-                    <i class="fas fa-bars"></i><span></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="nav navbar-nav ms-auto">
-                        <li class="nav-item dropdown">
-                        </li>
-                        <li class="nav-item dropdown">
-                            <div class="nav-dropdown">
-                                <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
-                                    <i class="fas fa-user"></i> <span id="username-display">Loading...</span> 
-                                    <i style="font-size: .8em;" class="fas fa-caret-down"></i>
-                                </a>  
-                                <div class="dropdown-menu dropdown-menu-end nav-link-menu">
-                                    <ul class="nav-list">
-                                        <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </li>
-                    </ul>
+  <!-- Proteksi login sederhana -->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const userData = localStorage.getItem("user");
+      if (!userData) {
+        window.location.href = "login.html";
+        return;
+      }
+      const user = JSON.parse(userData);
+      const usernameDisplay = document.getElementById("username-display");
+      if (usernameDisplay) {
+        usernameDisplay.textContent = user.username || "User";
+      }
+      const logoutBtn = document.getElementById("logout-btn");
+      if (logoutBtn) {
+        logoutBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          localStorage.removeItem("user");
+          window.location.href = "login.html";
+        });
+      }
+    });
+  </script>
+
+  <div class="wrapper">
+    <!-- Sidebar -->
+    <nav id="sidebar" class="active">
+      <div class="sidebar-header text-center">
+        <img src="assets/img/expert-logo.png" alt="App Logo" class="app-logo" width="120" />
+      </div>
+      <ul class="list-unstyled components text-secondary">
+        <li><a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+        <li><a href="question_input.html"><i class="fas fa-file-signature"></i> Input Soal Quiz</a></li>
+        <li><a href="formula_input.html"><i class="fas fa-calculator"></i> Input Formula</a></li>
+        <li><a href="charts.html"><i class="fas fa-chart-line"></i> Statistik Nilai</a></li>
+        <li><a href="formula_list.html"><i class="fas fa-list-alt"></i> Daftar Formula</a></li>
+        <li><a href="question_list.html"><i class="fas fa-list-alt"></i> Daftar Soal</a></li>
+      </ul>
+    </nav>
+
+    <!-- Body -->
+    <div id="body" class="active">
+      <!-- Topbar -->
+      <nav class="navbar navbar-expand-lg navbar-white bg-white">
+        <button type="button" id="sidebarCollapse" class="btn btn-light">
+          <i class="fas fa-bars"></i><span></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="nav navbar-nav ms-auto">
+            <li class="nav-item dropdown">
+              <div class="nav-dropdown">
+                <a href="#" id="nav2" class="nav-item nav-link dropdown-toggle text-secondary" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-user"></i> <span id="username-display">Loading...</span>
+                  <i style="font-size:.8em;" class="fas fa-caret-down"></i>
+                </a>
+                <div class="dropdown-menu dropdown-menu-end nav-link-menu">
+                  <ul class="nav-list">
+                    <li><a href="#" id="logout-btn" class="dropdown-item"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+                  </ul>
                 </div>
-            </nav>
-    
-            <div class="content">
-                <!-- Modal Edit Formula -->
-                <div class="modal fade" id="editFormulaModal" tabindex="-1" aria-labelledby="editFormulaModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <h5 class="modal-title" id="editFormulaModalLabel">Edit Formula</h5>
-                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                            </div>
-                            <div class="modal-body">
-                                <form id="editFormulaForm">
-                                    <input type="hidden" id="editFormulaId">
-                                    
-                                    <div class="mb-3">
-                                        <label class="form-label">Nama Formula</label>
-                                        <input type="text" id="editNamaFormula" class="form-control" required>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Jenis Kalimat</label>
-                                        <select id="editJenisKalimat" class="form-select" required>
-                                            <option value="Verbal">Verbal</option>
-                                            <option value="Pasif">Pasif</option>
-                                            <option value="Nomina">Nomina</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Aspek</label>
-                                        <select id="editAspek" class="form-select" required>
-                                            <option value="ke-sudah-an">ke-sudah-an</option>
-                                            <option value="ke-sedang-an">ke-sedang-an</option>
-                                            <option value="ke-akandatang-an">ke-akandatang-an</option>
-                                            <option value="kosong">kosong</option>
-                                        </select>
-                                    </div>
-
-                                    <div class="mb-3">
-                                        <label class="form-label">Waktu</label>
-                                        <select id="editWaktu" class="form-select" required>
-                                            <option value="Sekarang">Sekarang</option>
-                                            <option value="Lampau">Lampau</option>
-                                            <option value="Akan Datang">Akan Datang</option>
-                                        </select>
-                                    </div>
-
-                                    <button type="submit" class="btn btn-primary"><i class="fas fa-save"></i> Simpan Perubahan</button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="container">
-                    <div class="page-title">
-                        <h3>Daftar Formula</h3>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-12 col-lg-12">
-                            <div class="card">
-                                <div class="card-body">
-                                    <div class="table-responsive">
-                                        <table class="table table-bordered">
-                                            <thead>
-                                                <tr>
-                                                    <th scope="col" style="text-align: center;">No</th>
-                                                    <th scope="col" style="text-align: center;">Nama Formula</th>
-                                                    <th scope="col" style="text-align: center;">Jenis Kalimat</th>
-                                                    <th scope="col" style="text-align: center;">Aspek</th>
-                                                    <th scope="col" style="text-align: center;">Waktu</th>
-                                                    <th scope="col" style="text-align: center;">Action</th>
-                                                </tr>
-                                                
-                                            </thead>
-                                            <tbody id="formula-table-body">
-                                                <tr>
-                                                    <th scope="row" class="text-center"></th>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td></td>
-                                                    <td class="text-center">
-                                                        <button class="btn btn-outline-info btn-rounded" onclick="editFormula('${formulaId}')"><i class="fas fa-pen"></i></button>
-                                                        <button class="btn btn-outline-danger btn-rounded" onclick="deleteFormula('${formulaId}')"><i class="fas fa-trash"></i></button>
-                                                    </td>                                                    
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+              </div>
+            </li>
+          </ul>
         </div>
-    </div>
-    <script src="assets/vendor/jquery/jquery.min.js"></script>
-    <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-    <script src="assets/vendor/datatables/datatables.min.js"></script>
-    <script src="assets/js/initiate-datatables.js"></script>
-    <script src="assets/js/script.js"></script>
-</body>
+      </nav>
 
+      <!-- Content -->
+      <div class="content">
+        <!-- Modal Edit Formula -->
+        <div class="modal fade" id="editFormulaModal" tabindex="-1" aria-labelledby="editFormulaModalLabel" aria-hidden="true">
+          <div class="modal-dialog">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="editFormulaModalLabel">Edit Formula</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <form id="editFormulaForm">
+                  <input type="hidden" id="editFormulaId" />
+                  <div class="mb-3">
+                    <label class="form-label">Nama Formula</label>
+                    <input type="text" id="editNamaFormula" class="form-control" required />
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Jenis Kalimat</label>
+                    <select id="editJenisKalimat" class="form-select" required>
+                      <option value="Verbal">Verbal</option>
+                      <option value="Pasif">Pasif</option>
+                      <option value="Nomina">Nomina</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Aspek</label>
+                    <select id="editAspek" class="form-select" required>
+                      <option value="ke-sudah-an">ke-sudah-an</option>
+                      <option value="ke-sedang-an">ke-sedang-an</option>
+                      <option value="ke-akandatang-an">ke-akandatang-an</option>
+                      <option value="kosong">kosong</option>
+                    </select>
+                  </div>
+                  <div class="mb-3">
+                    <label class="form-label">Waktu</label>
+                    <select id="editWaktu" class="form-select" required>
+                      <option value="Sekarang">Sekarang</option>
+                      <option value="Lampau">Lampau</option>
+                      <option value="Akan Datang">Akan Datang</option>
+                    </select>
+                  </div>
+                  <button type="submit" class="btn btn-primary">
+                    <i class="fas fa-save"></i> Simpan Perubahan
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Table -->
+        <div class="container">
+          <div class="page-title">
+            <h3>Daftar Formula</h3>
+          </div>
+          <div class="row">
+            <div class="col-md-12 col-lg-12">
+              <div class="card">
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-bordered">
+                      <thead>
+                        <tr>
+                          <th class="text-center" style="width:70px;">No</th>
+                          <th class="text-center">Nama Formula</th>
+                          <th class="text-center">Jenis Kalimat</th>
+                          <th class="text-center">Aspek</th>
+                          <th class="text-center">Waktu</th>
+                          <th class="text-center">Contoh</th> <!-- kolom baru -->
+                          <th class="text-center" style="min-width:160px;">Action</th>
+                        </tr>
+                      </thead>
+                      <tbody id="formula-table-body">
+                        <!-- Baris dirender via JS -->
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            </div> <!-- col -->
+          </div> <!-- row -->
+        </div> <!-- container -->
+      </div> <!-- content -->
+    </div> <!-- body -->
+  </div> <!-- wrapper -->
+
+  <!-- Vendors JS -->
+  <script src="assets/vendor/jquery/jquery.min.js"></script>
+  <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+  <script src="assets/vendor/datatables/datatables.min.js"></script>
+  <script src="assets/js/initiate-datatables.js"></script>
+  <script src="assets/js/script.js"></script>
+</body>
 </html>
