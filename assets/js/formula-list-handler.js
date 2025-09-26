@@ -139,6 +139,7 @@ window.editFormula = async function (formulaId) {
     document.getElementById("editJenisKalimat").value = data.jenis_kalimat || "";
     document.getElementById("editAspek").value = data.aspek || "";
     document.getElementById("editWaktu").value = data.waktu || "";
+    document.getElementById("editExample").value = data.example || "";
 
     new bootstrap.Modal(document.getElementById("editFormulaModal")).show();
   } catch (error) {
@@ -158,6 +159,7 @@ document
       jenis_kalimat: document.getElementById("editJenisKalimat").value,
       aspek: document.getElementById("editAspek").value,
       waktu: document.getElementById("editWaktu").value,
+      example: document.getElementById("editExample").value?.trim() || ""
     };
 
     try {
