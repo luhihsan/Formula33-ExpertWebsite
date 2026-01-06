@@ -9,6 +9,7 @@ async function simpanFormula(event) {
     const aspek = document.querySelector('select[name="aspek"]').value;
     const waktu = document.querySelector('select[name="waktu"]').value;
     const isi_formula = document.querySelector('input[name="isi_formula"]').value.trim();
+    const contoh_kalimat = document.querySelector('input[name="contoh_kalimat"]').value.trim();
 
     if (!nama_formula) {
         alert("Nama Formula tidak boleh kosong!");
@@ -20,12 +21,19 @@ async function simpanFormula(event) {
         return;
     }
 
+    if (!contoh_kalimat) {
+        alert("Contoh kalimat tidak boleh kosong!");
+        return;
+    }
+
     const formulaId = nama_formula.replace(/\s+/g, "").toUpperCase();
+
     const formulaData = {
-        aspek: aspek,
         jenis_kalimat: jenis_kalimat,
+        aspek: aspek,
         waktu: waktu,
-        isi: isi_formula
+        isi: isi_formula,
+        example: contoh_kalimat
     };
 
     try {
