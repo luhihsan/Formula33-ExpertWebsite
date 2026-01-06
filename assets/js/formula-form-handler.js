@@ -2,34 +2,40 @@ import { database } from "./firebase-config.js";
 import { ref, set } from "https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js";
 
 async function simpanFormula(event) {
-    event.preventDefault(); 
+    event.preventDefault();
 
     const nama_formula = document.querySelector('input[name="nama_formula"]').value.trim();
     const jenis_kalimat = document.querySelector('select[name="jenis_kalimat"]').value;
     const aspek = document.querySelector('select[name="aspek"]').value;
     const waktu = document.querySelector('select[name="waktu"]').value;
+    const isi_formula = document.querySelector('input[name="isi_formula"]').value.trim();
 
     if (!nama_formula) {
         alert("Nama Formula tidak boleh kosong!");
         return;
     }
 
-    const formulaId = nama_formula.replace(/\s+/g, "").toUpperCase();
+    if (!isi_formula) {
+        alert("Isi Formula tidak boleh kosong!");
+        return;
+    }
 
+    const formulaId = nama_formula.replace(/\s+/g, "").toUpperCase();
     const formulaData = {
         aspek: aspek,
         jenis_kalimat: jenis_kalimat,
-        waktu: waktu
+        waktu: waktu,
+        isi: isi_formula
     };
 
-    await set(ref(database, `formula/${formulaId}`), formulaData)
-        .then(() => {
-            alert(`Formula berhasil disimpan dengan ID: ${formulaId}`);
-            document.querySelector("form").reset();
-        })
-        .catch(error => {
-            console.error("Error menyimpan formula:", error);
-        });
+    try {
+        await set(ref(database, `formula/${formulaId}`), formulaData);
+        alert(`Formula berhasil disimpan dengan ID: ${formulaId}`);
+        document.querySelector("form").reset();
+    } catch (error) {
+        console.error("Error menyimpan formula:", error);
+        alert("Gagal menyimpan formula!");
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {

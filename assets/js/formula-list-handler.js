@@ -64,7 +64,7 @@ async function loadFormulas() {
     if (!snapshot.exists()) {
       const row = document.createElement("tr");
       row.innerHTML = `
-        <td colspan="7" class="text-center text-muted">Belum ada data formula.</td>
+        <td colspan="8" class="text-center text-muted">Belum ada data formula.</td>
       `;
       tableBody.appendChild(row);
       refreshDataTable();
@@ -79,14 +79,21 @@ async function loadFormulas() {
     keys.forEach((formulaId) => {
       const formula = data[formulaId] || {};
       const namaFormula = formulaId;
+
       const jenisKalimat = formula.jenis_kalimat || "-";
       const aspek = formula.aspek || "-";
       const waktu = formula.waktu || "-";
-      const exampleRaw = formula.example || "-";
 
-      const exampleShort = truncate(exampleRaw, 80);
+      // NEW: isi formula (pakai key "isi")
+      const isiRaw = formula.isi || "-";
+      const isiShort = truncate(String(isiRaw), 60);
+      const isiSafe = escapeHTML(isiShort);
+      const isiFullSafe = escapeHTML(String(isiRaw));
+
+      const exampleRaw = formula.example || "-";
+      const exampleShort = truncate(String(exampleRaw), 80);
       const exampleSafe = escapeHTML(exampleShort);
-      const exampleFullSafe = escapeHTML(exampleRaw);
+      const exampleFullSafe = escapeHTML(String(exampleRaw));
 
       const row = document.createElement("tr");
       row.innerHTML = `
@@ -95,6 +102,16 @@ async function loadFormulas() {
         <td>${escapeHTML(jenisKalimat)}</td>
         <td>${escapeHTML(aspek)}</td>
         <td>${escapeHTML(waktu)}</td>
+
+        <td>
+          <span
+            data-bs-toggle="tooltip"
+            data-bs-placement="top"
+            title="${isiFullSafe}"
+            style="display:inline-block; max-width: 420px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
+          >${isiSafe}</span>
+        </td>
+
         <td>
           <span
             data-bs-toggle="tooltip"
@@ -103,6 +120,7 @@ async function loadFormulas() {
             style="display:inline-block; max-width: 520px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;"
           >${exampleSafe}</span>
         </td>
+
         <td class="text-center">
           <button class="btn btn-outline-info btn-rounded me-1" onclick="editFormula('${namaFormula}')">
             <i class="fas fa-pen"></i>
@@ -112,9 +130,9 @@ async function loadFormulas() {
           </button>
         </td>
       `;
-
       tableBody.appendChild(row);
-    });
+   });
+
     enableTooltips(tableBody);
     refreshDataTable();
   } catch (error) {
@@ -139,6 +157,7 @@ window.editFormula = async function (formulaId) {
     document.getElementById("editJenisKalimat").value = data.jenis_kalimat || "";
     document.getElementById("editAspek").value = data.aspek || "";
     document.getElementById("editWaktu").value = data.waktu || "";
+    document.getElementById("editIsiFormula").value = data.isi || "";
     document.getElementById("editExample").value = data.example || "";
 
     new bootstrap.Modal(document.getElementById("editFormulaModal")).show();
@@ -159,6 +178,7 @@ document
       jenis_kalimat: document.getElementById("editJenisKalimat").value,
       aspek: document.getElementById("editAspek").value,
       waktu: document.getElementById("editWaktu").value,
+      isi: document.getElementById("editIsiFormula").value?.trim() || "",
       example: document.getElementById("editExample").value?.trim() || ""
     };
 

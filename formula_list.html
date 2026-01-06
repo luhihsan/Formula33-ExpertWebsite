@@ -20,7 +20,6 @@
 </head>
 
 <body>
-  <!-- Proteksi login sederhana -->
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const userData = localStorage.getItem("user");
@@ -99,10 +98,12 @@
               <div class="modal-body">
                 <form id="editFormulaForm">
                   <input type="hidden" id="editFormulaId" />
+
                   <div class="mb-3">
                     <label class="form-label">Nama Formula</label>
                     <input type="text" id="editNamaFormula" class="form-control" required />
                   </div>
+
                   <div class="mb-3">
                     <label class="form-label">Jenis Kalimat</label>
                     <select id="editJenisKalimat" class="form-select" required>
@@ -111,6 +112,7 @@
                       <option value="Nomina">Nomina</option>
                     </select>
                   </div>
+
                   <div class="mb-3">
                     <label class="form-label">Aspek</label>
                     <select id="editAspek" class="form-select" required>
@@ -120,6 +122,7 @@
                       <option value="kosong">kosong</option>
                     </select>
                   </div>
+
                   <div class="mb-3">
                     <label class="form-label">Waktu</label>
                     <select id="editWaktu" class="form-select" required>
@@ -128,13 +131,21 @@
                       <option value="Akan Datang">Akan Datang</option>
                     </select>
                   </div>
+
                   <div class="mb-3">
-                      <label class="form-label">Example</label>
+                    <label class="form-label">Isi Formula</label>
+                    <input type="text" id="editIsiFormula"  class="form-control"   placeholder="misal: is/am/are" required />
+                  </div>
+
+                  <div class="mb-3">
+                      <label class="form-label">Contoh</label>
                       <textarea id="editExample" class="form-control" rows="2" placeholder="contoh kalimat, misal: I am a student"></textarea>
                   </div>
+
                   <button type="submit" class="btn btn-primary">
                     <i class="fas fa-save"></i> Simpan Perubahan
                   </button>
+                  
                 </form>
               </div>
             </div>
@@ -159,7 +170,8 @@
                           <th class="text-center">Jenis Kalimat</th>
                           <th class="text-center">Aspek</th>
                           <th class="text-center">Waktu</th>
-                          <th class="text-center">Contoh</th> <!-- kolom baru -->
+                          <th class="text-center">Isi Formula</th>
+                          <th class="text-center">Contoh</th> 
                           <th class="text-center" style="min-width:160px;">Action</th>
                         </tr>
                       </thead>
